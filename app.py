@@ -19,7 +19,7 @@ def values(message: telebot.types.Message):
    bot.reply_to(message, text)
 
 @bot.message_handler(content_types=['text'])
-def convert(message:telebot.types.Message):
+def get_price(message:telebot.types.Message):
     try:
         values = message.text.split(' ')
 
@@ -27,13 +27,13 @@ def convert(message:telebot.types.Message):
             raise ConvertionException('Слишком много параметров.')
 
         quote, base, amount = values
-        total_base = CryptoConverter.convert(quote, base,amount)
+        total_base = CryptoConverter.get_price(quote, base,amount)
     except ConvertionException as e:
         bot.reply_to(message, f'Ошибка пользователя\n{e}')
     except Exception:
         bot.reply_to(message, f'Не удалось обработать команду\n{e}')
     else:
-        text = f'Цена {amount} {quote} в {base} - {total_base} '
+        text = f'Цена {amount} {quote} в {base} - {float(total_base)*int(amount)} '
         bot.send_message(message.chat.id,text)
 
 
